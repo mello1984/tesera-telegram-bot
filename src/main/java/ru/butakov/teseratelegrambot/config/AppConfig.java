@@ -27,11 +27,6 @@ public class AppConfig {
     @Value("${bot.webHookPath}")
     String botWebHookPath;
 
-    //    @Autowired
-//    RestTemplate restTemplate;
-//    @Value("${telegrambot.registerwebhook.path}")
-//    String registerWebhookUrl;
-
     @Bean
     public WebHookTeseraBot webHookTeseraBot() {
         WebHookTeseraBot bot = new WebHookTeseraBot(botToken, botName, botWebHookPath);
@@ -56,15 +51,4 @@ public class AppConfig {
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
-
-
-//        private void registerWebhookOnTelegram() {
-//        String url = String.format(registerWebhookUrl, botToken, botPath);
-//        ResponseEntity<String> response = restTemplate.exchange(
-//                url,
-//                HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-//                });
-//        log.info("Register webhook on Telegram: " + response.getBody());
-//        System.out.println("Register webhook on Telegram: " + response.getBody());
-//}
 }

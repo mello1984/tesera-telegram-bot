@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.butakov.teseratelegrambot.entity.Comment;
-import ru.butakov.teseratelegrambot.entity.Publication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +19,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class CommentModel {
-    //    @Value("${tesera.article}")
-//    String teseraArticleURL;
-//    @Value("${tesera.journal}")
-//    String teseraJournalURL;
-//    @Value("${tesera.new}")
-//    String teseraNewsURL;
-//    @Value("${tesera.thought}")
-//    String teseraThoughtURL;
     @Value("${tesera.api.comments}")
     String teseraApiCommentsURL;
 
@@ -70,7 +61,6 @@ public class CommentModel {
         switch (comment.getCommentObject().getObjectType()) {
             case "Article" -> comment.setUrl(String.format(teseraArticleCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
             case "News" -> comment.setUrl(String.format(teseraNewsCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
-//            case "Journal" -> comment.setUrl(String.format(teseraJournalCommentUrl, comment.getAuthor().getLogin(),  comment.getCommentObject().getAlias(), comment.getTeseraId()));
             case "Journal" -> comment.setUrl(journalModel.getJournalUrl(comment.getCommentObject().getAlias()) + "/comments/#post" + comment.getTeseraId());
             case "Thought" -> comment.setUrl(String.format(teseraThoughtCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
             case "Game" -> comment.setUrl(String.format(teseraGameCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));

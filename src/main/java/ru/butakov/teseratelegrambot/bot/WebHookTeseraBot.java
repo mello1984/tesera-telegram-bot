@@ -20,7 +20,6 @@ public class WebHookTeseraBot extends TelegramWebhookBot {
     String botUsername;
     String botPath;
 
-
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         SendMessage sendMessage = new SendMessage(update.getMessage().getChatId().toString(), update.getMessage().getText());

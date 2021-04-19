@@ -17,6 +17,4 @@ public class TeseraIdObjectService {
     public TeseraIdObject findTopByTeseraId() {
         return teseraIdObjectRepository.findTopByTeseraIdIsNotNull();
     }
-
-//    public TeseraIdObject findTopTeseraIdObject
 }

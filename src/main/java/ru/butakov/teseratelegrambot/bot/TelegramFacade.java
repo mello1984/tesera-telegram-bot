@@ -12,36 +12,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.butakov.teseratelegrambot.bot.handlers.CallbackManager;
 import ru.butakov.teseratelegrambot.bot.handlers.HandlerManager;
 import ru.butakov.teseratelegrambot.bot.handlers.messagehandlers.BotCommand;
-import ru.butakov.teseratelegrambot.entity.ObjectType;
-import ru.butakov.teseratelegrambot.entity.Publication;
-import ru.butakov.teseratelegrambot.entity.User;
-import ru.butakov.teseratelegrambot.service.MainService;
-import ru.butakov.teseratelegrambot.service.ObjectTypeService;
-import ru.butakov.teseratelegrambot.service.UserService;
-
-import java.util.List;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class TelegramFacade {
     @Autowired
-    WebHookTeseraBot teseraBot;
-    @Autowired
-    MainService mainService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    ObjectTypeService objectTypeService;
-
-    @Autowired
     HandlerManager handlerManager;
     @Autowired
     CallbackManager callbackManager;
-
-    @Autowired
-    SendMessageFormat sendMessageFormat;
-
 
     public BotApiMethod<?> handleUpdate(Update update) {
         SendMessage replyMessage = null;
@@ -56,17 +35,6 @@ public class TelegramFacade {
             log.info("New message from User:{}, with text: {}", message.getChatId(), message.getText());
             replyMessage = handleInputMessage(message);
         }
-
-//        List<Publication> publicationList = mainService.getPublicationList();
-//        for (Publication p : publicationList) {
-//            ObjectType objectType = objectTypeService.findObjectTypeByIdOrCreateNewObjectType(p.getObjectType());
-//
-//            for (User user : objectType.getUserSet()) {
-//                SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(user.getChatId());
-//                sendMessage.setText("PUBLICATION: " + p.toString());
-//                teseraBot.send(sendMessage);
-//            }
-//        }
 
         return replyMessage;
 

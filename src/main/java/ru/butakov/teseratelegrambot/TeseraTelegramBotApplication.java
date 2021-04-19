@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @SpringBootApplication(scanBasePackages = "ru.butakov.teseratelegrambot.*")
 @EnableScheduling
 public class TeseraTelegramBotApplication {
-    public static BlockingQueue<BotApiMethod<?>> updateBlockingQueue = new LinkedBlockingQueue<>();
+    public final static BlockingQueue<BotApiMethod<?>> updateBlockingQueue = new LinkedBlockingQueue<>();
 
     public static void main(String[] args) {
 

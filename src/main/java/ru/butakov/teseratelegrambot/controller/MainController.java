@@ -23,11 +23,5 @@ public class MainController {
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return telegramFacade.handleUpdate(update);
-        //        telegramFacade.handleUpdate(update);
-//        System.out.println("PUBLICATIONS:");
-//        service.getPublications();
-//        System.out.println("COMMENTS:");
-//        service.getComments();
-//        bot.onWebhookUpdateReceived(update);
     }
 }

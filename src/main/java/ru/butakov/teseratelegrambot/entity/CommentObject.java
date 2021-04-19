@@ -22,5 +22,4 @@ public class CommentObject {
     String title;
     @JsonProperty
     String objectType;
-//    ObjectType objectType;
 }
