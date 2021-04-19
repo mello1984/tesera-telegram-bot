@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Comment {
+public class Comment  {
     @JsonProperty
     int teseraId;
     @JsonProperty
@@ -22,5 +22,6 @@ public class Comment {
     Author author;
     @JsonProperty(value = "object")
     CommentObject commentObject;
+    String url;
 
 }

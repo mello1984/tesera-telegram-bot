@@ -1,9 +1,10 @@
-package ru.butakov.teseratelegrambot.bot;
+package ru.butakov.teseratelegrambot.bot.handlers;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.butakov.teseratelegrambot.bot.handlers.InputMessageHandler;
+import ru.butakov.teseratelegrambot.bot.handlers.messagehandlers.BotCommand;
+import ru.butakov.teseratelegrambot.bot.handlers.messagehandlers.InputMessageHandler;
 
 import java.util.HashMap;
 import java.util.List;

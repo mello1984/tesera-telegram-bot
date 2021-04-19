@@ -1,10 +1,9 @@
-package ru.butakov.teseratelegrambot.bot.handlers;
+package ru.butakov.teseratelegrambot.bot.handlers.messagehandlers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.butakov.teseratelegrambot.bot.BotCommand;
 import ru.butakov.teseratelegrambot.bot.SendMessageFormat;
 import ru.butakov.teseratelegrambot.service.ReplyMessageService;
 

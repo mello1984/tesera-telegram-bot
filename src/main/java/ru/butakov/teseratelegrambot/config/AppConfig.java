@@ -17,7 +17,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.butakov.teseratelegrambot.bot.WebHookTeseraBot;
 
 @Configuration
-//@PropertySource("classpath:bot.properties")
 @PropertySources({@PropertySource("classpath:bot.properties"), @PropertySource("classpath:messages_ru_RU.properties")})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppConfig {

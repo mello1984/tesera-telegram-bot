@@ -5,28 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
+@NoArgsConstructor
 @Getter
 @Setter
-@ToString(of = {"objectType", "title", "author", "games", "url"})
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EqualsAndHashCode(of = {"objectId"})
-public class Publication  {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Journal {
     @JsonProperty
-    int objectId;
-    @JsonProperty
-    String objectType;
-    @JsonProperty
-    String title;
+    int teseraId;
     @JsonProperty
     String alias;
     @JsonProperty
-    String contentShort;
+    String title;
     @JsonProperty
     Author author;
-    @JsonProperty
-    List<Game> games;
-    String url;
 }

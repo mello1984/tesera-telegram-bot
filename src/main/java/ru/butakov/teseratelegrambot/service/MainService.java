@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.butakov.teseratelegrambot.entity.Article;
+import ru.butakov.teseratelegrambot.entity.Comment;
 import ru.butakov.teseratelegrambot.entity.Publication;
 import ru.butakov.teseratelegrambot.model.ArticleModel;
 import ru.butakov.teseratelegrambot.model.CommentModel;
@@ -33,24 +34,11 @@ public class MainService {
     @Autowired
     CommentModel commentModel;
 
-//    public void getArticles() {
-//        articleModel.getListArticleDetail().forEach(System.out::println);
-//    }
-//
-//    public void getNews() {
-//        newsModel.getListNewsDetail().forEach(System.out::println);
-//    }
-//
-//    public void getPublications() {
-//        publicationModel.getListPublications().forEach(System.out::println);
-//    }
-//
-//    public void getComments(){
-//        commentModel.getListComments().forEach(System.out::println);
-//    }
-
-    public List<Publication> getPublicationList(){
+    public List<Publication> getPublicationList() {
         return publicationModel.getListPublications();
     }
 
+    public List<Comment> getCommentList() {
+        return commentModel.getListComments();
+    }
 }

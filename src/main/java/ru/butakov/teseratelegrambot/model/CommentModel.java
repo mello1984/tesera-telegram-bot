@@ -20,18 +20,32 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class CommentModel {
-    @Value("${tesera.article}")
-    String teseraArticleURL;
-    @Value("${tesera.journal}")
-    String teseraJournalURL;
-    @Value("${tesera.new}")
-    String teseraNewsURL;
-    @Value("${tesera.thought}")
-    String teseraThoughtURL;
+    //    @Value("${tesera.article}")
+//    String teseraArticleURL;
+//    @Value("${tesera.journal}")
+//    String teseraJournalURL;
+//    @Value("${tesera.new}")
+//    String teseraNewsURL;
+//    @Value("${tesera.thought}")
+//    String teseraThoughtURL;
     @Value("${tesera.api.comments}")
     String teseraApiCommentsURL;
+
+    @Value("${tesera.game.comment}")
+    String teseraGameCommentUrl;
+    @Value("${tesera.article.comment}")
+    String teseraArticleCommentUrl;
+    @Value("${tesera.news.comment}")
+    String teseraNewsCommentUrl;
+    @Value("${tesera.thought.comment}")
+    String teseraThoughtCommentUrl;
+    @Value("${tesera.journal.comment}")
+    String teseraJournalCommentUrl;
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    JournalModel journalModel;
 
     public List<Comment> getListComments() {
         List<Comment> comments = new ArrayList<>();
@@ -46,20 +60,26 @@ public class CommentModel {
         if (response.hasBody()) {
             comments = response.getBody();
         }
-//        comments.forEach(this::updateUrl);
+        comments.forEach(this::updateUrl);
 
         return comments;
     }
 
 
+    private void updateUrl(Comment comment) {
+        switch (comment.getCommentObject().getObjectType()) {
+            case "Article" -> comment.setUrl(String.format(teseraArticleCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
+            case "News" -> comment.setUrl(String.format(teseraNewsCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
+//            case "Journal" -> comment.setUrl(String.format(teseraJournalCommentUrl, comment.getAuthor().getLogin(),  comment.getCommentObject().getAlias(), comment.getTeseraId()));
+            case "Journal" -> comment.setUrl(journalModel.getJournalUrl(comment.getCommentObject().getAlias()) + "/comments/#post" + comment.getTeseraId());
+            case "Thought" -> comment.setUrl(String.format(teseraThoughtCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
+            case "Game" -> comment.setUrl(String.format(teseraGameCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
+            default -> log.warn("Unknown publication type: " + comment.toString());
+        }
+    }
 
-//    private void updateUrl(Comment comment) {
-//        switch (comment.getCommentObject().getObjectType()) {
-//            case Article -> comment.setUrl(teseraArticleURL + comment.getAlias());
-//            case News -> comment.setUrl(teseraNewsURL + comment.getAlias());
-//            case Journal -> comment.setUrl(String.format(teseraJournalURL, comment.getAuthor().getLogin(), comment.getAlias()));
-//            case Thought -> comment.setUrl(teseraThoughtURL + comment.getAlias());
-//            default -> log.warn("Unknown publication type: " + comment.toString());
-//        }
-//    }
+    public String getCommentMessage(Comment comment) {
+        return comment.toString().replaceAll("<br>", "");
+
+    }
 }

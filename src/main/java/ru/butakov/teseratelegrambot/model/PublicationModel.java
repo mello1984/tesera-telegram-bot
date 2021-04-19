@@ -60,13 +60,16 @@ public class PublicationModel {
         }
     }
 
-//    private void updateUrl(Publication publication) {
-//        switch (publication.getObjectType()) {
-//            case Article -> publication.setUrl(teseraArticleURL + publication.getAlias());
-//            case News -> publication.setUrl(teseraNewsURL + publication.getAlias());
-//            case Journal -> publication.setUrl(String.format(teseraJournalURL, publication.getAuthor().getLogin(), publication.getAlias()));
-//            case Thought -> publication.setUrl(teseraThoughtURL + publication.getAlias());
-//            default -> log.warn("Unknown publication type: " + publication.toString());
-//        }
-//    }
+    public String getPublicationMessageText(Publication publication) {
+        String text = publication.getObjectType() + "\n" +
+                publication.getTitle() + "\n" +
+                "автор: " + publication.getAuthor() + "\n" +
+                "связанные игры: " + publication.getGames() + "\n" +
+                publication.getContentShort() + "\n" +
+                publication.getUrl();
+        return text;
+
+
+    }
+
 }
