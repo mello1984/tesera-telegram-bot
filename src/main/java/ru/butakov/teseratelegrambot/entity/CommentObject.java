@@ -21,5 +21,6 @@ public class CommentObject {
     @JsonProperty
     String title;
     @JsonProperty
-    ObjectType objectType;
+    String objectType;
+//    ObjectType objectType;
 }

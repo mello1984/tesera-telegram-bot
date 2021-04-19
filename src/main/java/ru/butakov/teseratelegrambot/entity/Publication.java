@@ -17,7 +17,7 @@ public class Publication {
     @JsonProperty
     int objectId;
     @JsonProperty
-    ObjectType objectType;
+    String objectType;
     @JsonProperty
     String title;
     @JsonProperty
