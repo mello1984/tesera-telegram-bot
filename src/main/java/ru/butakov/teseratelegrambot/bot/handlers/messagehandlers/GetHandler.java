@@ -35,6 +35,8 @@ public class GetHandler implements InputMessageHandler {
     CommentModel commentModel;
     @Autowired
     TeseraIdObjectService teseraIdObjectService;
+    @Autowired
+    MessageSenderService messageSenderService;
 
     @Override
     public SendMessage handle(Message message) {
@@ -70,12 +72,7 @@ public class GetHandler implements InputMessageHandler {
             maxTeseraId = c.getTeseraId();
             SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(user.getChatId());
             sendMessage.setText("COMMENT: " + commentModel.getCommentMessage(c));
-            try {
-                TeseraTelegramBotApplication.updateBlockingQueue.put(sendMessage);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            messageSenderService.offerBotApiMethodToQueue(sendMessage);
         }
         teseraIdObject.setTeseraId(maxTeseraId);
         teseraIdObjectService.saveTeseraIdObject(teseraIdObject);

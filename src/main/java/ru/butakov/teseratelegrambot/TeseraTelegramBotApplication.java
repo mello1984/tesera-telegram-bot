@@ -13,10 +13,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 @SpringBootApplication(scanBasePackages = "ru.butakov.teseratelegrambot.*")
 @EnableScheduling
 public class TeseraTelegramBotApplication {
-    public final static BlockingQueue<BotApiMethod<?>> updateBlockingQueue = new LinkedBlockingQueue<>();
 
     public static void main(String[] args) {
-
         SpringApplication.run(TeseraTelegramBotApplication.class, args);
     }
 }
+
+//TODO: Защита от ddos
+//TODO: Публикации и комментарии - текст сообщения
+//TODO: Подписка на игры
+//TODO: Подписка на пользователей
+//TODO: Логирование
+//TODO:

@@ -23,7 +23,7 @@ public class User {
     @Column(unique = true)
     long chatId;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_object_types",
             joinColumns = {@JoinColumn(name = "userId")},
             inverseJoinColumns = {@JoinColumn(name = "objectTypeId")}

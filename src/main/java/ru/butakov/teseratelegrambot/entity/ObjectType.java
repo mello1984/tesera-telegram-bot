@@ -23,7 +23,7 @@ public class ObjectType {
     @Column(unique = true)
     String type;
 
-    @ManyToMany(mappedBy = "objectTypes")
+    @ManyToMany(mappedBy = "objectTypes", fetch = FetchType.EAGER)
     Set<User> userSet = new HashSet<>();
 
     public ObjectType(String type) {

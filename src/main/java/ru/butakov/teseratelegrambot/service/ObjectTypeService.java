@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -22,6 +23,10 @@ public class ObjectTypeService {
     public void setObjectTypeRepository(ObjectTypeRepository objectTypeRepository) {
         this.objectTypeRepository = objectTypeRepository;
         objectTypeRepository.findAll().forEach(objectType -> objectTypeMap.put(objectType.getType(), objectType));
+    }
+
+    public Map<String, ObjectType> getMapObjectTypes() {
+        return objectTypeRepository.findAll().stream().collect(Collectors.toMap(ObjectType::getType, o -> o));
     }
 
     public void save(ObjectType objectType) {
@@ -39,11 +44,13 @@ public class ObjectTypeService {
         return objectTypeRepository.findAll();
     }
 
-    public boolean hasObjectType(String type){
+    public boolean hasObjectType(String type) {
         return objectTypeMap.containsKey(type);
     }
 
-    public ObjectType getObjectType(String type){
+    public ObjectType getObjectType(String type) {
         return objectTypeMap.get(type);
     }
+
+
 }

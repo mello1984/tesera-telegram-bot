@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.butakov.teseratelegrambot.entity.Comment;
+import ru.butakov.teseratelegrambot.entity.Publication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,23 @@ public class CommentModel {
     }
 
     public String getCommentMessage(Comment comment) {
-        return comment.toString().replaceAll("<br>", "");
+        String objectType = switch (comment.getCommentObject().getObjectType()) {
+            case "Article" -> "Новый комментарий к статье";
+            case "News" -> "Новый комментарий к новости";
+            case "Journal" -> "Новый комментарий к игровому журналу";
+            case "Thought" -> "Новый комментарий к мысли";
+            default -> "";
+        };
+        String text = objectType + " '" +
+                comment.getCommentObject().getTitle() + "'\n" +
+                "Автор: " + comment.getAuthor().getLogin() + "\n" +
+                "Текст: " + comment.getContent().replaceAll("<br>", "") + "\n" +
+                "Ссылка: " + comment.getUrl();
+
+        return text;
+
+//        return comment.toString().replaceAll("<br>", "");
 
     }
+
 }

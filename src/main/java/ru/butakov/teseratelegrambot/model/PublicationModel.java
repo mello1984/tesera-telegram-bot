@@ -61,15 +61,21 @@ public class PublicationModel {
     }
 
     public String getPublicationMessageText(Publication publication) {
-        String text = publication.getObjectType() + "\n" +
-                publication.getTitle() + "\n" +
-                "автор: " + publication.getAuthor() + "\n" +
-                "связанные игры: " + publication.getGames() + "\n" +
-                publication.getContentShort() + "\n" +
-                publication.getUrl();
+        String publicationType = switch (publication.getObjectType()) {
+            case "Article" -> "Опубликована статья";
+            case "News" -> "Опубликована новость";
+            case "Journal" -> "Опубликован игровой журнал";
+            case "Thought" -> "Опубликована мысль";
+            default -> "";
+        };
+
+        String text = publicationType + "\n" +
+                "Заголовок: " + publication.getTitle() + "\n" +
+                "Автор: " + publication.getAuthor().getLogin() + "\n" +
+                "Связанные игры: " + publication.getGames() + "\n" +
+                "Краткое содержание: " + publication.getContentShort() + "\n" +
+                "Ссылка: " + publication.getUrl();
         return text;
-
-
     }
 
 }
