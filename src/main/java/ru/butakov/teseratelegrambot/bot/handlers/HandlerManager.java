@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HandlerManager {
     Map<BotCommand, InputMessageHandler> handlersMap = new HashMap<>();
 

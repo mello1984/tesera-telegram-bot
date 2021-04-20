@@ -55,7 +55,7 @@ public class GetHandler implements InputMessageHandler {
         TeseraIdObject teseraIdObject = teseraIdObjectService.findTopByTeseraId();
         int maxTeseraId = teseraIdObject.getTeseraId();
 
-        User user = userService.findUserById(message.getChatId());
+        User user = userService.findUserByIdOrCreateNewUser(message.getChatId());
         List<Publication> publicationList = mainService.getPublicationList();
         for (Publication p : publicationList) {
 //            if (p.getObjectId() <= maxTeseraId-TEMP_SHIFT) continue;

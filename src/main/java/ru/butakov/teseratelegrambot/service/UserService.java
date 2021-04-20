@@ -20,9 +20,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findUserById(long chatId) {
-        return userRepository.findUsersByChatId(chatId).orElse(null);
-    }
+//    public User findUserById(long chatId) {
+//        return userRepository.findUsersByChatId(chatId).orElse(null);
+//    }
 
     public User findUserByIdOrCreateNewUser(long chatId) {
         Optional<User> userFromDb = userRepository.findUsersByChatId(chatId);

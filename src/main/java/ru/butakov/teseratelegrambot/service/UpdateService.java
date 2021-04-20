@@ -22,6 +22,7 @@ import ru.butakov.teseratelegrambot.model.PublicationModel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -52,8 +53,9 @@ public class UpdateService {
     TeseraIdObjectService teseraIdObjectService;
     @Autowired
     MessageSenderService messageSenderService;
+    @Autowired
+    GameService gameService;
 
-    //    @Scheduled(fixedRateString = "10000")
     @Scheduled(fixedRateString = "${tesera.updateperiod}")
     public void updateTask() {
         sendPublicationsAndComments();
@@ -70,7 +72,6 @@ public class UpdateService {
         Map<String, ObjectType> objectTypeMap = objectTypeService.getMapObjectTypes();
 
         List<Publication> publicationList = mainService.getPublicationList();
-//        System.out.println(publicationList);
         for (Publication p : publicationList) {
             if (p.getObjectId() <= teseraIdObject.getTeseraId() - TEMP_SHIFT) continue;
             maxTeseraId = Math.max(maxTeseraId, p.getObjectId());
@@ -88,9 +89,16 @@ public class UpdateService {
             if (c.getTeseraId() <= teseraIdObject.getTeseraId() - TEMP_SHIFT) continue;
             maxTeseraId = Math.max(maxTeseraId, c.getTeseraId());
 
+            Game game = null;
+            if (c.getCommentObject().getObjectType().equals("Game")) {
+                Optional<Game> gameFromDb = gameService.findByTeseraId(c.getCommentObject().getTeseraId());
+                game = gameFromDb.orElse(null);
+            }
+
             Set<User> subscribedOnObjectType = objectTypeMap.get(c.getCommentObject().getObjectType()).getUserSet();
             for (User user : subscribedOnObjectType) {
-                if (!subscribedOnComments.contains(user)) continue;
+
+                if (!subscribedOnComments.contains(user) && !user.getGames().contains(game)) continue;
                 SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(user.getChatId());
                 sendMessage.setText(commentModel.getCommentMessage(c));
                 messageSenderService.offerBotApiMethodToQueue(sendMessage);

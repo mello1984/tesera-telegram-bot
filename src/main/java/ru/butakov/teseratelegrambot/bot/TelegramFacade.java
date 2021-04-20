@@ -49,6 +49,8 @@ public class TelegramFacade {
             case "/get" -> BotCommand.GET;
             default -> BotCommand.UNKNONWN;
         };
+        if (message.getText().startsWith("/search")) command = BotCommand.SEARCH;
+        if (message.getText().startsWith("/game")) command = BotCommand.GAMESUBSCRIPTION;
         return handlerManager.getMessageHandler(command).handle(message);
     }
 }

@@ -30,6 +30,12 @@ public class User {
     )
     Set<ObjectType> objectTypes = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+            @JoinTable(name = "users_games",
+            joinColumns = {@JoinColumn(name = "userId")},
+            inverseJoinColumns = {@JoinColumn(name = "gameId")})
+    Set<Game> games = new HashSet<>();
+
     public User(long chatId) {
         this.chatId = chatId;
     }

@@ -46,7 +46,7 @@ public class SettingsHandler implements InputMessageHandler {
     }
 
     private Object[] getBaseUserSubscriptions(long chatId) {
-        User user = userService.findUserById(chatId);
+        User user = userService.findUserByIdOrCreateNewUser(chatId);
         Set<ObjectType> userObjectTypes = user.getObjectTypes();
 
         List<String> result = new ArrayList<>();
@@ -59,7 +59,7 @@ public class SettingsHandler implements InputMessageHandler {
     }
 
     public SendMessage setInlineButtons(SendMessage sendMessage) {
-        User user = userService.findUserById(Long.parseLong(sendMessage.getChatId()));
+        User user = userService.findUserByIdOrCreateNewUser(Long.parseLong(sendMessage.getChatId()));
         Set<ObjectType> userObjectTypes = user.getObjectTypes();
         InlineKeyboardButton buttonNews = !userObjectTypes.contains(objectTypeService.getObjectType("News")) ?
                 new InlineKeyboardButton("News: On", null, "newsOn", null, null, null, null, null) :

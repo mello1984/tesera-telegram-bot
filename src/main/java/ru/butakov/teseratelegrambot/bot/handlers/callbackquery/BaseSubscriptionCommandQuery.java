@@ -25,7 +25,7 @@ public class BaseSubscriptionCommandQuery implements CallbackQueryHandler {
     public SendMessage handleCallbackQuery(CallbackQuery callbackQuery) {
         System.out.println(callbackQuery.getData());
         long chatId = callbackQuery.getMessage().getChatId();
-        User user = userService.findUserById(chatId);
+        User user = userService.findUserByIdOrCreateNewUser(chatId);
         switch (callbackQuery.getData()) {
             case "newsOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("News"));
             case "newsOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("News"));
