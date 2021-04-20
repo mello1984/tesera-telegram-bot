@@ -35,6 +35,10 @@ public class BaseSubscriptionCommandQuery implements CallbackQueryHandler {
             case "journalOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Journal"));
             case "thoughtOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Thought"));
             case "thoughtOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Thought"));
+            case "commentOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Comment"));
+            case "commentOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Comment"));
+            case "gameOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Game"));
+            case "gameOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Game"));
         }
         userService.saveUser(user);
         SendMessage reply = sendMessageFormat.getSendMessageBaseFormat(chatId);

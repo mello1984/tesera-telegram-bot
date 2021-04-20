@@ -22,7 +22,7 @@ public class CallbackManager {
 
     public CallbackQueryHandler getCallbackQueryHandler(CallbackQuery callbackQuery) {
         CallbackQueryHandler handler = switch (callbackQuery.getData()) {
-            case "newsOn", "newsOff", "articleOn", "articleOff", "journalOn", "journalOff", "thoughtOn", "thoughtOff" -> handlersMap.get(CallbackCommand.SUBSCRIBE);
+            case "newsOn", "newsOff", "articleOn", "articleOff", "journalOn", "journalOff", "thoughtOn", "thoughtOff", "commentOn","commentOff", "gameOn", "gameOff" -> handlersMap.get(CallbackCommand.SUBSCRIBE);
             default -> throw new IllegalStateException("Unexpected value: " + callbackQuery.getData());
         };
 

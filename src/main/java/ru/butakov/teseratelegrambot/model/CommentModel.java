@@ -75,6 +75,7 @@ public class CommentModel {
             case "News" -> "Новый комментарий к новости";
             case "Journal" -> "Новый комментарий к игровому журналу";
             case "Thought" -> "Новый комментарий к мысли";
+            case "Game" -> "Новый комментарий к игре";
             default -> "";
         };
         String text = objectType + " '" +

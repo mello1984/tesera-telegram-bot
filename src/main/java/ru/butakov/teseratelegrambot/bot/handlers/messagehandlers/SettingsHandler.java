@@ -54,6 +54,7 @@ public class SettingsHandler implements InputMessageHandler {
         result.add(userObjectTypes.contains(objectTypeService.getObjectType("Article")) ? "On" : "Off");
         result.add(userObjectTypes.contains(objectTypeService.getObjectType("Journal")) ? "On" : "Off");
         result.add(userObjectTypes.contains(objectTypeService.getObjectType("Thought")) ? "On" : "Off");
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Comment")) ? "On" : "Off");
         return result.toArray();
     }
 
@@ -75,13 +76,21 @@ public class SettingsHandler implements InputMessageHandler {
         InlineKeyboardButton buttonThought = !userObjectTypes.contains(objectTypeService.getObjectType("Thought")) ?
                 new InlineKeyboardButton("Thought: On", null, "thoughtOn", null, null, null, null, null) :
                 new InlineKeyboardButton("Thought: Off", null, "thoughtOff", null, null, null, null, null);
+        InlineKeyboardButton buttonComment = !userObjectTypes.contains(objectTypeService.getObjectType("Comment")) ?
+                new InlineKeyboardButton("Comment: On", null, "commentOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Comment: Off", null, "commentOff", null, null, null, null, null);
+    InlineKeyboardButton buttonGame = !userObjectTypes.contains(objectTypeService.getObjectType("Game")) ?
+                new InlineKeyboardButton("Game: On", null, "gameOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Game: Off", null, "gameOff", null, null, null, null, null);
 
         List<InlineKeyboardButton> keyboardRow1 = new ArrayList<>();
         keyboardRow1.add(buttonNews);
         keyboardRow1.add(buttonArticle);
+        keyboardRow1.add(buttonGame);
         List<InlineKeyboardButton> keyboardRow2 = new ArrayList<>();
         keyboardRow2.add(buttonJournal);
         keyboardRow2.add(buttonThought);
+        keyboardRow2.add(buttonComment);
 
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(keyboardRow1);

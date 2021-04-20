@@ -22,6 +22,7 @@ import ru.butakov.teseratelegrambot.model.PublicationModel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -82,10 +83,14 @@ public class UpdateService {
         }
 
         List<Comment> comments = mainService.getCommentList();
+        Set<User> subscribedOnComments = objectTypeMap.get("Comment").getUserSet();
         for (Comment c : comments) {
             if (c.getTeseraId() <= teseraIdObject.getTeseraId() - TEMP_SHIFT) continue;
             maxTeseraId = Math.max(maxTeseraId, c.getTeseraId());
-            for (User user : objectTypeMap.get(c.getCommentObject().getObjectType()).getUserSet()) {
+
+            Set<User> subscribedOnObjectType = objectTypeMap.get(c.getCommentObject().getObjectType()).getUserSet();
+            for (User user : subscribedOnObjectType) {
+                if (!subscribedOnComments.contains(user)) continue;
                 SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(user.getChatId());
                 sendMessage.setText(commentModel.getCommentMessage(c));
                 messageSenderService.offerBotApiMethodToQueue(sendMessage);
