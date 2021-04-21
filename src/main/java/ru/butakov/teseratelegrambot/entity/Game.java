@@ -28,12 +28,6 @@ public class Game {
     String title;
     @Transient
     @JsonProperty
-    String title2;
-    @Transient
-    @JsonProperty
-    String title3;
-    @Transient
-    @JsonProperty
     String alias;
     @Transient
     @JsonProperty

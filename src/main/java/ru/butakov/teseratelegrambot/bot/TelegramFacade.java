@@ -27,30 +27,16 @@ public class TelegramFacade {
         if (update.hasCallbackQuery()) {
             log.info("New callbackQuery from User:{}, with data: {}",
                     update.getCallbackQuery().getFrom().getId(), update.getCallbackQuery().getData());
-            replyMessage = callbackManager.getCallbackQueryHandler(update.getCallbackQuery()).handleCallbackQuery(update.getCallbackQuery());
+            replyMessage = callbackManager
+                    .getCallbackQueryHandler(update.getCallbackQuery())
+                    .handleCallbackQuery(update.getCallbackQuery());
         }
 
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             log.info("New message from User:{}, with text: {}", message.getChatId(), message.getText());
-            replyMessage = handleInputMessage(message);
+            replyMessage = handlerManager.handleInputMessage(message);
         }
-
         return replyMessage;
-
-
-    }
-
-    private SendMessage handleInputMessage(Message message) {
-        BotCommand command = switch (message.getText()) {
-            case "/start" -> BotCommand.START;
-            case "/settings" -> BotCommand.SETTINGS;
-            case "/help" -> BotCommand.HELP;
-            case "/get" -> BotCommand.GET;
-            default -> BotCommand.UNKNONWN;
-        };
-        if (message.getText().startsWith("/search")) command = BotCommand.SEARCH;
-        if (message.getText().startsWith("/game")) command = BotCommand.GAMESUBSCRIPTION;
-        return handlerManager.getMessageHandler(command).handle(message);
     }
 }

@@ -7,21 +7,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.butakov.teseratelegrambot.bot.TelegramFacade;
-import ru.butakov.teseratelegrambot.bot.WebHookTeseraBot;
 import ru.butakov.teseratelegrambot.service.MainService;
 
 @RestController
 public class MainController {
     @Autowired
-    WebHookTeseraBot bot;
-    @Autowired
     MainService mainService;
-    @Autowired
-    TelegramFacade telegramFacade;
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
-        return telegramFacade.handleUpdate(update);
+        return mainService.onUpdateReceived(update);
     }
 }

@@ -8,11 +8,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.butakov.teseratelegrambot.bot.SendMessageFormat;
 import ru.butakov.teseratelegrambot.entity.ObjectType;
 import ru.butakov.teseratelegrambot.entity.User;
 import ru.butakov.teseratelegrambot.service.ObjectTypeService;
-import ru.butakov.teseratelegrambot.service.ReplyMessageService;
 import ru.butakov.teseratelegrambot.service.UserService;
 import ru.butakov.teseratelegrambot.utils.Emojis;
 
@@ -22,11 +20,7 @@ import java.util.Set;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SettingsHandler implements InputMessageHandler {
-    @Autowired
-    ReplyMessageService replyMessageService;
-    @Autowired
-    SendMessageFormat sendMessageFormat;
+public class SettingsHandler extends AbstractHandler {
     @Autowired
     UserService userService;
     @Autowired

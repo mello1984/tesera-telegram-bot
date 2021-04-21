@@ -23,6 +23,7 @@ public class ReplyMessageService {
     public String getMessage(String messageCode) {
         return getMessage(messageCode, null);
     }
+
     public String getMessage(String messageCode, Object arg) {
         return getMessage(messageCode, new Object[]{arg});
     }

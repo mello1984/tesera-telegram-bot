@@ -15,9 +15,5 @@ public class Author {
     @JsonProperty
     int teseraId;
     @JsonProperty
-    String name;
-    @JsonProperty
     String login;
-    @JsonProperty
-    String teseraUrl;
 }

@@ -23,9 +23,12 @@ public class MessageSenderService {
         BotApiMethod<?> botApiMethod = updateBlockingQueue.take();
         try {
             teseraBot.execute(botApiMethod);
+            log.info("BotApiMethod executed: {}", botApiMethod.toString());
         } catch (TelegramApiException e) {
-            log.warn("Exception in sending message: " + botApiMethod.toString());
-            log.warn("Exception in sending message", e);
+            log.warn("Exception with executing botApiMethod, part1: {}", botApiMethod.toString(), e);
+            log.warn("Exception with executing botApiMethod, part2:", e);
+            updateBlockingQueue.offer(botApiMethod);
+            Thread.sleep(500);
         }
     }
 

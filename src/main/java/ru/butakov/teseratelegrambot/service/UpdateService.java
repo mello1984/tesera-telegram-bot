@@ -5,17 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.hk2.api.messaging.MessageReceiver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.butakov.teseratelegrambot.TeseraTelegramBotApplication;
 import ru.butakov.teseratelegrambot.bot.SendMessageFormat;
 import ru.butakov.teseratelegrambot.bot.WebHookTeseraBot;
-import ru.butakov.teseratelegrambot.bot.handlers.messagehandlers.BotCommand;
 import ru.butakov.teseratelegrambot.entity.*;
 import ru.butakov.teseratelegrambot.model.CommentModel;
 import ru.butakov.teseratelegrambot.model.PublicationModel;
@@ -58,35 +53,30 @@ public class UpdateService {
 
     @Scheduled(fixedRateString = "${tesera.updateperiod}")
     public void updateTask() {
-        sendPublicationsAndComments();
-        log.info("UpdateTask executed");
+        int maxTeseraId = sendPublicationsAndCommentsAndGetMaxTeseraId();
+        log.info("UpdateTask executed, maxTeseraId = {}", maxTeseraId);
     }
 
 
-    public void sendPublicationsAndComments() {
-        int TEMP_SHIFT = 0; // for test only
+    public int sendPublicationsAndCommentsAndGetMaxTeseraId() {
 
         TeseraIdObject teseraIdObject = teseraIdObjectService.findTopByTeseraId();
-        int maxTeseraId = teseraIdObject.getTeseraId();
-
         Map<String, ObjectType> objectTypeMap = objectTypeService.getMapObjectTypes();
 
-        List<Publication> publicationList = mainService.getPublicationList();
-        for (Publication p : publicationList) {
-            if (p.getObjectId() <= teseraIdObject.getTeseraId() - TEMP_SHIFT) continue;
-            maxTeseraId = Math.max(maxTeseraId, p.getObjectId());
+        int maxTeseraId = teseraIdObject.getTeseraId();
+        maxTeseraId = sendPublicationsAndGetMaxTeseraId(teseraIdObject, maxTeseraId, objectTypeMap);
+        maxTeseraId = sendCommentsAndGetMaxTeseraId(teseraIdObject, maxTeseraId, objectTypeMap);
 
-            for (User user : objectTypeMap.get(p.getObjectType()).getUserSet()) {
-                SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(user.getChatId());
-                sendMessage.setText(publicationModel.getPublicationMessageText(p));
-                messageSenderService.offerBotApiMethodToQueue(sendMessage);
-            }
-        }
+        teseraIdObject.setTeseraId(maxTeseraId);
+        teseraIdObjectService.saveTeseraIdObject(teseraIdObject);
+        return maxTeseraId;
+    }
 
+    private int sendCommentsAndGetMaxTeseraId(TeseraIdObject teseraIdObject, int maxTeseraId, Map<String, ObjectType> objectTypeMap) {
         List<Comment> comments = mainService.getCommentList();
         Set<User> subscribedOnComments = objectTypeMap.get("Comment").getUserSet();
         for (Comment c : comments) {
-            if (c.getTeseraId() <= teseraIdObject.getTeseraId() - TEMP_SHIFT) continue;
+            if (c.getTeseraId() <= teseraIdObject.getTeseraId()) continue;
             maxTeseraId = Math.max(maxTeseraId, c.getTeseraId());
 
             Game game = null;
@@ -104,8 +94,22 @@ public class UpdateService {
                 messageSenderService.offerBotApiMethodToQueue(sendMessage);
             }
         }
-        teseraIdObject.setTeseraId(maxTeseraId);
-        teseraIdObjectService.saveTeseraIdObject(teseraIdObject);
+        return maxTeseraId;
+    }
+
+    private int sendPublicationsAndGetMaxTeseraId(TeseraIdObject teseraIdObject, int maxTeseraId, Map<String, ObjectType> objectTypeMap) {
+        List<Publication> publicationList = mainService.getPublicationList();
+        for (Publication p : publicationList) {
+            if (p.getObjectId() <= teseraIdObject.getTeseraId()) continue;
+            maxTeseraId = Math.max(maxTeseraId, p.getObjectId());
+
+            for (User user : objectTypeMap.get(p.getObjectType()).getUserSet()) {
+                SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(user.getChatId());
+                sendMessage.setText(publicationModel.getPublicationMessageText(p));
+                messageSenderService.offerBotApiMethodToQueue(sendMessage);
+            }
+        }
+        return maxTeseraId;
     }
 
 
