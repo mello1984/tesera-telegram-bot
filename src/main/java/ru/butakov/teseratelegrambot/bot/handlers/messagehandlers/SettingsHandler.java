@@ -14,6 +14,7 @@ import ru.butakov.teseratelegrambot.entity.User;
 import ru.butakov.teseratelegrambot.service.ObjectTypeService;
 import ru.butakov.teseratelegrambot.service.ReplyMessageService;
 import ru.butakov.teseratelegrambot.service.UserService;
+import ru.butakov.teseratelegrambot.utils.Emojis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +51,18 @@ public class SettingsHandler implements InputMessageHandler {
         Set<ObjectType> userObjectTypes = user.getObjectTypes();
 
         List<String> result = new ArrayList<>();
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("News")) ? "On" : "Off");
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Article")) ? "On" : "Off");
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Journal")) ? "On" : "Off");
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Thought")) ? "On" : "Off");
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Comment")) ? "On" : "Off");
+        result.add(Emojis.NEWS.toString());
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType("News")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
+        result.add(Emojis.ARTICLE.toString());
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Article")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
+        result.add(Emojis.JOURNAL.toString());
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Journal")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
+        result.add(Emojis.THOUGHT.toString());
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Thought")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
+        result.add(Emojis.COMMENT.toString());
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Game")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
+        result.add(Emojis.COMMENT.toString());
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Comment")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
         return result.toArray();
     }
 
@@ -62,34 +70,35 @@ public class SettingsHandler implements InputMessageHandler {
         User user = userService.findUserByIdOrCreateNewUser(Long.parseLong(sendMessage.getChatId()));
         Set<ObjectType> userObjectTypes = user.getObjectTypes();
         InlineKeyboardButton buttonNews = !userObjectTypes.contains(objectTypeService.getObjectType("News")) ?
-                new InlineKeyboardButton("News: On", null, "newsOn", null, null, null, null, null) :
-                new InlineKeyboardButton("News: Off", null, "newsOff", null, null, null, null, null);
+                new InlineKeyboardButton("Новости: вкл", null, "newsOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Новости: выкл", null, "newsOff", null, null, null, null, null);
 
         InlineKeyboardButton buttonArticle = !userObjectTypes.contains(objectTypeService.getObjectType("Article")) ?
-                new InlineKeyboardButton("Article: On", null, "articleOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Article: Off", null, "articleOff", null, null, null, null, null);
+                new InlineKeyboardButton("Статьи: вкл", null, "articleOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Статьи: выкл", null, "articleOff", null, null, null, null, null);
 
         InlineKeyboardButton buttonJournal = !userObjectTypes.contains(objectTypeService.getObjectType("Journal")) ?
-                new InlineKeyboardButton("Journal: On", null, "journalOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Journal: Off", null, "journalOff", null, null, null, null, null);
+                new InlineKeyboardButton("Журналы: вкл", null, "journalOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Журналы: выкл", null, "journalOff", null, null, null, null, null);
 
         InlineKeyboardButton buttonThought = !userObjectTypes.contains(objectTypeService.getObjectType("Thought")) ?
-                new InlineKeyboardButton("Thought: On", null, "thoughtOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Thought: Off", null, "thoughtOff", null, null, null, null, null);
+                new InlineKeyboardButton("Мысли: вкл", null, "thoughtOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Мысли: выкл", null, "thoughtOff", null, null, null, null, null);
         InlineKeyboardButton buttonComment = !userObjectTypes.contains(objectTypeService.getObjectType("Comment")) ?
-                new InlineKeyboardButton("Comment: On", null, "commentOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Comment: Off", null, "commentOff", null, null, null, null, null);
-    InlineKeyboardButton buttonGame = !userObjectTypes.contains(objectTypeService.getObjectType("Game")) ?
-                new InlineKeyboardButton("Game: On", null, "gameOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Game: Off", null, "gameOff", null, null, null, null, null);
+                new InlineKeyboardButton("Комм.(все): вкл", null, "commentOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Комм.(все): выкл", null, "commentOff", null, null, null, null, null);
+        InlineKeyboardButton buttonGame = !userObjectTypes.contains(objectTypeService.getObjectType("Game")) ?
+                new InlineKeyboardButton("Игры: вкл", null, "gameOn", null, null, null, null, null) :
+                new InlineKeyboardButton("Игры: выкл", null, "gameOff", null, null, null, null, null);
 
         List<InlineKeyboardButton> keyboardRow1 = new ArrayList<>();
         keyboardRow1.add(buttonNews);
         keyboardRow1.add(buttonArticle);
-        keyboardRow1.add(buttonGame);
+        keyboardRow1.add(buttonJournal);
+
         List<InlineKeyboardButton> keyboardRow2 = new ArrayList<>();
-        keyboardRow2.add(buttonJournal);
         keyboardRow2.add(buttonThought);
+        keyboardRow2.add(buttonGame);
         keyboardRow2.add(buttonComment);
 
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();

@@ -11,7 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.butakov.teseratelegrambot.entity.Comment;
-import ru.butakov.teseratelegrambot.entity.Publication;
+import ru.butakov.teseratelegrambot.service.ReplyMessageService;
+import ru.butakov.teseratelegrambot.utils.Emojis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,8 @@ public class CommentModel {
     String teseraJournalCommentUrl;
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    ReplyMessageService replyMessageService;
 
     @Autowired
     JournalModel journalModel;
@@ -57,7 +60,6 @@ public class CommentModel {
         return comments;
     }
 
-
     private void updateUrl(Comment comment) {
         switch (comment.getCommentObject().getObjectType()) {
             case "Article" -> comment.setUrl(String.format(teseraArticleCommentUrl, comment.getCommentObject().getAlias(), comment.getTeseraId()));
@@ -70,24 +72,20 @@ public class CommentModel {
     }
 
     public String getCommentMessage(Comment comment) {
-        String objectType = switch (comment.getCommentObject().getObjectType()) {
-            case "Article" -> "Новый комментарий к статье";
-            case "News" -> "Новый комментарий к новости";
-            case "Journal" -> "Новый комментарий к игровому журналу";
-            case "Thought" -> "Новый комментарий к мысли";
-            case "Game" -> "Новый комментарий к игре";
+        String commentHead = switch (comment.getCommentObject().getObjectType()) {
+            case "Article" -> replyMessageService.getMessage("reply.comment.article", new Object[]{Emojis.COMMENT.toString(), comment.getCommentObject().getTitle()});
+            case "News" -> replyMessageService.getMessage("reply.comment.news", new Object[]{Emojis.COMMENT.toString(), comment.getCommentObject().getTitle()});
+            case "Journal" -> replyMessageService.getMessage("reply.comment.journal", new Object[]{Emojis.COMMENT.toString(), comment.getCommentObject().getTitle()});
+            case "Thought" -> replyMessageService.getMessage("reply.comment.thought", new Object[]{Emojis.COMMENT.toString(), comment.getCommentObject().getTitle()});
+            case "Game" -> replyMessageService.getMessage("reply.comment.game", new Object[]{Emojis.COMMENT.toString(), comment.getCommentObject().getTitle()});
             default -> "";
         };
-        String text = objectType + " '" +
-                comment.getCommentObject().getTitle() + "'\n" +
-                "Автор: " + comment.getAuthor().getLogin() + "\n" +
-                "Текст: " + comment.getContent().replaceAll("<br>", "") + "\n" +
-                "Ссылка: " + comment.getUrl();
 
-        return text;
-
-//        return comment.toString().replaceAll("<br>", "");
-
+        return replyMessageService.getMessage("reply.comment.textbody", new Object[]{
+                commentHead,
+                comment.getAuthor().getLogin(),
+                comment.getContent().replaceAll("<br>", ""),
+                comment.getUrl()
+        });
     }
-
 }

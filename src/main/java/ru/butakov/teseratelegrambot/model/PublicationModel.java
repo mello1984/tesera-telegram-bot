@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.butakov.teseratelegrambot.entity.Publication;
+import ru.butakov.teseratelegrambot.service.ReplyMessageService;
+import ru.butakov.teseratelegrambot.utils.Emojis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,11 @@ public class PublicationModel {
     String teseraApiPublicationsURL;
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    GameModel gameModel;
+
+    @Autowired
+    ReplyMessageService replyMessageService;
 
     public List<Publication> getListPublications() {
         List<Publication> publications = new ArrayList<>();
@@ -61,21 +68,22 @@ public class PublicationModel {
     }
 
     public String getPublicationMessageText(Publication publication) {
-        String publicationType = switch (publication.getObjectType()) {
-            case "Article" -> "Опубликована статья";
-            case "News" -> "Опубликована новость";
-            case "Journal" -> "Опубликован игровой журнал";
-            case "Thought" -> "Опубликована мысль";
+
+        String publicationHead = switch (publication.getObjectType()) {
+            case "Article" -> replyMessageService.getMessage("reply.publication.article", new Object[]{Emojis.ARTICLE.toString()});
+            case "News" -> replyMessageService.getMessage("reply.publication.news", new Object[]{Emojis.NEWS.toString()});
+            case "Journal" -> replyMessageService.getMessage("reply.publication.journal", new Object[]{Emojis.JOURNAL.toString()});
+            case "Thought" -> replyMessageService.getMessage("reply.publication.thought", new Object[]{Emojis.THOUGHT.toString()});
             default -> "";
         };
 
-        String text = publicationType + "\n" +
-                "Заголовок: " + publication.getTitle() + "\n" +
-                "Автор: " + publication.getAuthor().getLogin() + "\n" +
-                "Связанные игры: " + publication.getGames() + "\n" +
-                "Краткое содержание: " + publication.getContentShort() + "\n" +
-                "Ссылка: " + publication.getUrl();
-        return text;
+        return replyMessageService.getMessage("reply.publication.textbody", new Object[]{
+                publicationHead,
+                publication.getTitle(),
+                publication.getAuthor().getLogin(),
+                gameModel.getGameListMessageText(publication.getGames()),
+                publication.getContentShort(),
+                publication.getUrl()});
     }
 
 }
