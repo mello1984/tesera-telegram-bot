@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.butakov.teseratelegrambot.bot.handlers.CallbackManager;
 import ru.butakov.teseratelegrambot.bot.handlers.HandlerManager;
-import ru.butakov.teseratelegrambot.bot.handlers.messagehandlers.BotCommand;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -27,9 +26,7 @@ public class TelegramFacade {
         if (update.hasCallbackQuery()) {
             log.info("New callbackQuery from User:{}, with data: {}",
                     update.getCallbackQuery().getFrom().getId(), update.getCallbackQuery().getData());
-            replyMessage = callbackManager
-                    .getCallbackQueryHandler(update.getCallbackQuery())
-                    .handleCallbackQuery(update.getCallbackQuery());
+            replyMessage = callbackManager.handleCallbackQuery(update.getCallbackQuery());
         }
 
         Message message = update.getMessage();

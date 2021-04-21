@@ -18,11 +18,6 @@ public class GameService {
     }
 
     public Optional<Game> findByTeseraId(int gameId) {
-        Optional<Game> gameFromDb = gameRepository.findByTeseraId(gameId);
-//        Game game = gameFromDb.orElse(new Game(gameId));
-//        if (gameFromDb.isEmpty()) {
-//            gameRepository.save(game);
-//        }
-        return gameFromDb;
+        return gameRepository.findByTeseraId(gameId);
     }
 }

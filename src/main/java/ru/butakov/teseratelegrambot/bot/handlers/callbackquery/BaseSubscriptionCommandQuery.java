@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import ru.butakov.teseratelegrambot.bot.SendMessageFormat;
+import ru.butakov.teseratelegrambot.entity.ObjectType;
 import ru.butakov.teseratelegrambot.entity.User;
 import ru.butakov.teseratelegrambot.service.ObjectTypeService;
 import ru.butakov.teseratelegrambot.service.ReplyMessageService;
@@ -23,28 +24,19 @@ public class BaseSubscriptionCommandQuery implements CallbackQueryHandler {
 
     @Override
     public SendMessage handleCallbackQuery(CallbackQuery callbackQuery) {
-        System.out.println(callbackQuery.getData());
         long chatId = callbackQuery.getMessage().getChatId();
         User user = userService.findUserByIdOrCreateNewUser(chatId);
-        switch (callbackQuery.getData()) {
-            case "newsOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("News"));
-            case "newsOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("News"));
-            case "articleOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Article"));
-            case "articleOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Article"));
-            case "journalOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Journal"));
-            case "journalOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Journal"));
-            case "thoughtOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Thought"));
-            case "thoughtOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Thought"));
-            case "commentOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Comment"));
-            case "commentOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Comment"));
-            case "gameOn" -> user.getObjectTypes().add(objectTypeService.getObjectType("Game"));
-            case "gameOff" -> user.getObjectTypes().remove(objectTypeService.getObjectType("Game"));
-        }
+
+        String[] command = callbackQuery.getData().split("_");
+        ObjectType objectType = objectTypeService.getObjectType(command[0]);
+        if (command[1].equals("On")) user.getObjectTypes().add(objectType);
+        else user.getObjectTypes().remove(objectType);
+
         userService.saveUser(user);
-        SendMessage reply = sendMessageFormat.getSendMessageBaseFormat(chatId);
-        String text = replyMessageService.getMessage("reply.settings.basesubscription");
-        reply.setText(text);
-        return reply;
+        String replyText = replyMessageService.getMessage("reply.settings.basesubscription");
+        SendMessage replyMessage = sendMessageFormat.getSendMessageBaseFormat(chatId);
+        replyMessage.setText(replyText);
+        return replyMessage;
     }
 
     @Override

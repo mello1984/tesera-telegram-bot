@@ -22,7 +22,7 @@ public enum Emojis {
     ;
 
 
-    private String emoji;
+    private final String emoji;
 
     @Override
     public String toString() {

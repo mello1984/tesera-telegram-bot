@@ -3,6 +3,7 @@ package ru.butakov.teseratelegrambot.bot.handlers.messagehandlers;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -15,6 +16,7 @@ import ru.butakov.teseratelegrambot.service.UserService;
 import ru.butakov.teseratelegrambot.utils.Emojis;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -25,14 +27,25 @@ public class SettingsHandler extends AbstractHandler {
     UserService userService;
     @Autowired
     ObjectTypeService objectTypeService;
+    @Value("${tesera.object.type.news}")
+    String teseraObjectTypeNews;
+    @Value("${tesera.object.type.article}")
+    String teseraObjectTypeArticle;
+    @Value("${tesera.object.type.journal}")
+    String teseraObjectTypeJournal;
+    @Value("${tesera.object.type.thought}")
+    String teseraObjectTypeThought;
+    @Value("${tesera.object.type.game}")
+    String teseraObjectTypeGame;
+    @Value("${tesera.object.type.comment}")
+    String teseraObjectTypeComment;
 
     @Override
     public SendMessage handle(Message message) {
-        String replyText = replyMessageService.getMessage("reply.settings", getBaseUserSubscriptions(message.getChatId()));
+        String replyText = replyMessageService.getMessage("reply.settings", getBaseUserSubscriptionsTextLine(message.getChatId()));
         SendMessage replyMessage = sendMessageFormat.getSendMessageBaseFormat(message.getChatId());
         replyMessage.setText(replyText);
-        setInlineButtons(replyMessage);
-        return replyMessage;
+        return setInlineButtons(replyMessage);
     }
 
     @Override
@@ -40,67 +53,48 @@ public class SettingsHandler extends AbstractHandler {
         return BotCommand.SETTINGS;
     }
 
-    private Object[] getBaseUserSubscriptions(long chatId) {
+    private Object[] getBaseUserSubscriptionsTextLine(long chatId) {
         User user = userService.findUserByIdOrCreateNewUser(chatId);
         Set<ObjectType> userObjectTypes = user.getObjectTypes();
 
-        List<String> result = new ArrayList<>();
-        result.add(Emojis.NEWS.toString());
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("News")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
-        result.add(Emojis.ARTICLE.toString());
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Article")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
-        result.add(Emojis.JOURNAL.toString());
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Journal")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
-        result.add(Emojis.THOUGHT.toString());
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Thought")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
-        result.add(Emojis.COMMENT.toString());
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Game")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
-        result.add(Emojis.COMMENT.toString());
-        result.add(userObjectTypes.contains(objectTypeService.getObjectType("Comment")) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
-        return result.toArray();
+        List<String> resultList = new ArrayList<>();
+        addSubscriptionStringToResultList(userObjectTypes, resultList, teseraObjectTypeNews, Emojis.NEWS);
+        addSubscriptionStringToResultList(userObjectTypes, resultList, teseraObjectTypeArticle, Emojis.ARTICLE);
+        addSubscriptionStringToResultList(userObjectTypes, resultList, teseraObjectTypeJournal, Emojis.JOURNAL);
+        addSubscriptionStringToResultList(userObjectTypes, resultList, teseraObjectTypeThought, Emojis.THOUGHT);
+        addSubscriptionStringToResultList(userObjectTypes, resultList, teseraObjectTypeGame, Emojis.COMMENT);
+        addSubscriptionStringToResultList(userObjectTypes, resultList, teseraObjectTypeComment, Emojis.COMMENT);
+
+        return resultList.toArray();
     }
 
-    public SendMessage setInlineButtons(SendMessage sendMessage) {
+    private void addSubscriptionStringToResultList(Set<ObjectType> userObjectTypes, List<String> result, String type, Emojis emoji) {
+        result.add(emoji.toString());
+        result.add(userObjectTypes.contains(objectTypeService.getObjectType(type)) ? Emojis.ENABLED.toString() : Emojis.DISABLED.toString());
+    }
+
+    private SendMessage setInlineButtons(SendMessage sendMessage) {
         User user = userService.findUserByIdOrCreateNewUser(Long.parseLong(sendMessage.getChatId()));
         Set<ObjectType> userObjectTypes = user.getObjectTypes();
-        InlineKeyboardButton buttonNews = !userObjectTypes.contains(objectTypeService.getObjectType("News")) ?
-                new InlineKeyboardButton("Новости: вкл", null, "newsOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Новости: выкл", null, "newsOff", null, null, null, null, null);
+        InlineKeyboardButton buttonNews = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeNews, replyMessageService.getMessage("reply.type.news"));
+        InlineKeyboardButton buttonArticle = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeArticle, replyMessageService.getMessage("reply.type.article"));
+        InlineKeyboardButton buttonJournal = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeJournal, replyMessageService.getMessage("reply.type.journal"));
+        InlineKeyboardButton buttonThought = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeThought, replyMessageService.getMessage("reply.type.thought"));
+        InlineKeyboardButton buttonComment = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeComment, replyMessageService.getMessage("reply.type.comment"));
+        InlineKeyboardButton buttonGame = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeNews, replyMessageService.getMessage("reply.type.game"));
 
-        InlineKeyboardButton buttonArticle = !userObjectTypes.contains(objectTypeService.getObjectType("Article")) ?
-                new InlineKeyboardButton("Статьи: вкл", null, "articleOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Статьи: выкл", null, "articleOff", null, null, null, null, null);
-
-        InlineKeyboardButton buttonJournal = !userObjectTypes.contains(objectTypeService.getObjectType("Journal")) ?
-                new InlineKeyboardButton("Журналы: вкл", null, "journalOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Журналы: выкл", null, "journalOff", null, null, null, null, null);
-
-        InlineKeyboardButton buttonThought = !userObjectTypes.contains(objectTypeService.getObjectType("Thought")) ?
-                new InlineKeyboardButton("Мысли: вкл", null, "thoughtOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Мысли: выкл", null, "thoughtOff", null, null, null, null, null);
-        InlineKeyboardButton buttonComment = !userObjectTypes.contains(objectTypeService.getObjectType("Comment")) ?
-                new InlineKeyboardButton("Комм.(все): вкл", null, "commentOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Комм.(все): выкл", null, "commentOff", null, null, null, null, null);
-        InlineKeyboardButton buttonGame = !userObjectTypes.contains(objectTypeService.getObjectType("Game")) ?
-                new InlineKeyboardButton("Игры: вкл", null, "gameOn", null, null, null, null, null) :
-                new InlineKeyboardButton("Игры: выкл", null, "gameOff", null, null, null, null, null);
-
-        List<InlineKeyboardButton> keyboardRow1 = new ArrayList<>();
-        keyboardRow1.add(buttonNews);
-        keyboardRow1.add(buttonArticle);
-        keyboardRow1.add(buttonJournal);
-
-        List<InlineKeyboardButton> keyboardRow2 = new ArrayList<>();
-        keyboardRow2.add(buttonThought);
-        keyboardRow2.add(buttonGame);
-        keyboardRow2.add(buttonComment);
-
-        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(keyboardRow1);
-        keyboard.add(keyboardRow2);
+        List<InlineKeyboardButton> keyboardRow1 = new ArrayList<>(Arrays.asList(buttonNews, buttonArticle, buttonJournal));
+        List<InlineKeyboardButton> keyboardRow2 = new ArrayList<>(Arrays.asList(buttonThought, buttonGame, buttonComment));
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>(Arrays.asList(keyboardRow1, keyboardRow2));
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(keyboard);
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
+    }
+
+    private InlineKeyboardButton getInlineKeyboardButton(Set<ObjectType> userObjectTypes, String type, String buttonText) {
+        return !userObjectTypes.contains(objectTypeService.getObjectType(type)) ?
+                new InlineKeyboardButton(buttonText + ": вкл", null, type + "_On", null, null, null, null, null) :
+                new InlineKeyboardButton(buttonText + ": выкл", null, type + "_Off", null, null, null, null, null);
     }
 }
