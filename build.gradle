@@ -27,7 +27,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.telegram', name: 'telegrambots', version: '5.1.1'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-	compile group: 'com.vdurmont', name: 'emoji-java', version: '5.1.1'
+	implementation group: 'com.vdurmont', name: 'emoji-java', version: '5.1.1'
 }
 
 test {

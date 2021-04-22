@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.butakov.teseratelegrambot.dao.TeseraIdObjectRepository;
 import ru.butakov.teseratelegrambot.entity.TeseraIdObject;
 
+import java.util.Optional;
+
 @Service
 public class TeseraIdObjectService {
     @Autowired
@@ -15,6 +17,14 @@ public class TeseraIdObjectService {
     }
 
     public TeseraIdObject findTopByTeseraId() {
-        return teseraIdObjectRepository.findTopByTeseraIdIsNotNull();
+        TeseraIdObject teseraIdObject;
+        Optional<TeseraIdObject> teseraIdObjectFromDb = teseraIdObjectRepository.findTopByTeseraIdIsNotNull();
+        if (teseraIdObjectFromDb.isEmpty()) {
+            teseraIdObject = new TeseraIdObject();
+            teseraIdObject.setTeseraId(1);
+            teseraIdObjectRepository.save(teseraIdObject);
+        } else teseraIdObject = teseraIdObjectFromDb.get();
+
+        return teseraIdObject;
     }
 }
