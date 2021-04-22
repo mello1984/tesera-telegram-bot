@@ -26,11 +26,12 @@ public class CallbackManager {
     }
 
     private CallbackQueryHandler getCallbackQueryHandler(CallbackQuery callbackQuery) {
-        return switch (callbackQuery.getData()) {
-            case "News_On", "News_Off", "Article_On", "Article_Off", "Journal_On", "Journal_Off", "Thought_On", "Thought_Off",
-                    "Comment_On","Comment_Off", "Game_On", "Game_Off" -> handlersMap.get(CallbackCommand.SUBSCRIBE);
-            default -> throw new IllegalStateException("Unexpected value: " + callbackQuery.getData());
-        };
+        return handlersMap.get(CallbackCommand.SUBSCRIBE);
+//        return switch (callbackQuery.getData()) {
+//            case "News_On", "News_Off", "Article_On", "Article_Off", "Journal_On", "Journal_Off", "Thought_On", "Thought_Off",
+//                    "Comment_On","Comment_Off", "Game_On", "Game_Off" -> handlersMap.get(CallbackCommand.SUBSCRIBE);
+//            default -> throw new IllegalStateException("Unexpected value: " + callbackQuery.getData());
+//        };
     }
 
 }

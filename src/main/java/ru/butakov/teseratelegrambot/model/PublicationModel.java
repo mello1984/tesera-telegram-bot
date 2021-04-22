@@ -35,9 +35,19 @@ public class PublicationModel {
     RestTemplate restTemplate;
     @Autowired
     GameModel gameModel;
-
     @Autowired
     ReplyMessageService replyMessageService;
+
+    @Value("${tesera.object.type.news}")
+    String teseraObjectTypeNews;
+    @Value("${tesera.object.type.article}")
+    String teseraObjectTypeArticle;
+    @Value("${tesera.object.type.journal}")
+    String teseraObjectTypeJournal;
+    @Value("${tesera.object.type.thought}")
+    String teseraObjectTypeThought;
+    @Value("${tesera.object.type.game}")
+    String teseraObjectTypeGame;
 
     public List<Publication> getListPublications() {
         List<Publication> publications = new ArrayList<>();
@@ -58,24 +68,51 @@ public class PublicationModel {
     }
 
     private void updateUrl(Publication publication) {
-        switch (publication.getObjectType()) {
-            case "Article" -> publication.setUrl(teseraArticleURL + publication.getAlias());
-            case "News" -> publication.setUrl(teseraNewsURL + publication.getAlias());
-            case "Journal" -> publication.setUrl(String.format(teseraJournalURL, publication.getAuthor().getLogin(), publication.getAlias()));
-            case "Thought" -> publication.setUrl(teseraThoughtURL + publication.getAlias());
-            default -> log.warn("Unknown publication type: " + publication.toString());
-        }
+        String type = publication.getObjectType();
+        String alias = publication.getAlias();
+        String userLogin = publication.getAuthor().getLogin();
+
+        if (type.equals(teseraObjectTypeArticle))
+            publication.setUrl(teseraArticleURL + alias);
+        if (type.equals(teseraObjectTypeNews))
+            publication.setUrl(teseraNewsURL + alias);
+        if (type.equals(teseraObjectTypeThought))
+            publication.setUrl(teseraThoughtURL + alias);
+        if (type.equals(teseraObjectTypeJournal))
+            publication.setUrl(String.format(teseraJournalURL, userLogin, alias));
+
+//        switch (publication.getObjectType()) {
+//            case "Article" -> publication.setUrl(teseraArticleURL + publication.getAlias());
+//            case "News" -> publication.setUrl(teseraNewsURL + publication.getAlias());
+//            case "Journal" -> publication.setUrl(String.format(teseraJournalURL, publication.getAuthor().getLogin(), publication.getAlias()));
+//            case "Thought" -> publication.setUrl(teseraThoughtURL + publication.getAlias());
+//            default -> log.warn("Unknown publication type: " + publication.toString());
+//        }
     }
 
     public String getPublicationMessageText(Publication publication) {
 
-        String publicationHead = switch (publication.getObjectType()) {
-            case "Article" -> replyMessageService.getMessage("reply.publication.article", new Object[]{Emojis.ARTICLE.toString()});
-            case "News" -> replyMessageService.getMessage("reply.publication.news", new Object[]{Emojis.NEWS.toString()});
-            case "Journal" -> replyMessageService.getMessage("reply.publication.journal", new Object[]{Emojis.JOURNAL.toString()});
-            case "Thought" -> replyMessageService.getMessage("reply.publication.thought", new Object[]{Emojis.THOUGHT.toString()});
-            default -> "";
-        };
+//        String publicationHead = switch (publication.getObjectType()) {
+//            case "Article" -> replyMessageService.getMessage("reply.publication.article", new Object[]{Emojis.ARTICLE.toString()});
+//            case "News" -> replyMessageService.getMessage("reply.publication.news", new Object[]{Emojis.NEWS.toString()});
+//            case "Journal" -> replyMessageService.getMessage("reply.publication.journal", new Object[]{Emojis.JOURNAL.toString()});
+//            case "Thought" -> replyMessageService.getMessage("reply.publication.thought", new Object[]{Emojis.THOUGHT.toString()});
+//            default -> "";
+//        };
+
+        String publicationHead = "";
+        String type = publication.getObjectType();
+        String alias = publication.getAlias();
+        String userLogin = publication.getAuthor().getLogin();
+
+        if (type.equals(teseraObjectTypeArticle))
+            publicationHead =replyMessageService.getMessage("reply.publication.article", new Object[]{Emojis.ARTICLE.toString()});
+        if (type.equals(teseraObjectTypeNews))
+            publicationHead =replyMessageService.getMessage("reply.publication.news", new Object[]{Emojis.NEWS.toString()});
+        if (type.equals(teseraObjectTypeThought))
+            publicationHead =replyMessageService.getMessage("reply.publication.thought", new Object[]{Emojis.THOUGHT.toString()});
+        if (type.equals(teseraObjectTypeJournal))
+            publicationHead =replyMessageService.getMessage("reply.publication.journal", new Object[]{Emojis.JOURNAL.toString()});
 
         return replyMessageService.getMessage("reply.publication.textbody", new Object[]{
                 publicationHead,

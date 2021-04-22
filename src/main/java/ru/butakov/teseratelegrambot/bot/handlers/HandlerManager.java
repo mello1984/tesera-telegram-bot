@@ -22,12 +22,19 @@ public class HandlerManager {
     }
 
     public SendMessage handleInputMessage(Message message) {
-        BotCommand command = switch (message.getText()) {
-            case "/start" -> BotCommand.START;
-            case "/settings" -> BotCommand.SETTINGS;
-            case "/help" -> BotCommand.HELP;
-            default -> BotCommand.UNKNONWN;
-        };
+//        BotCommand command = switch (message.getText()) {
+//            case "/start" -> BotCommand.START;
+//            case "/settings" -> BotCommand.SETTINGS;
+//            case "/help" -> BotCommand.HELP;
+//            default -> BotCommand.UNKNONWN;
+//        };
+
+        BotCommand command = BotCommand.UNKNONWN;
+
+        if (message.getText().equals("/start")) command = BotCommand.START;
+        if (message.getText().equals("/settings")) command = BotCommand.SETTINGS;
+        if (message.getText().equals("/help")) command = BotCommand.HELP;
+
         if (message.getText().startsWith("/search")) command = BotCommand.SEARCH;
         if (message.getText().startsWith("/game")) command = BotCommand.GAMESUBSCRIPTION;
         return handlersMap.get(command).handle(message);
