@@ -1,5 +1,7 @@
 package ru.butakov.teseratelegrambot.bot;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -12,11 +14,15 @@ import java.util.List;
 
 @Component
 public class SendMessageFormat {
+    private static final String commandHelp = "/help";
+    private static final String commandSettings = "/settings";
+
     public SendMessage getSendMessageBaseFormat(Long chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setParseMode("HTML");
         sendMessage.disableWebPagePreview();
         sendMessage.setChatId(String.valueOf(chatId));
+        setButtons(sendMessage, commandHelp, commandSettings);
         return sendMessage;
     }
 

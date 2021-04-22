@@ -16,6 +16,8 @@ public enum Emojis {
     JOURNAL(EmojiParser.parseToUnicode(":ledger:")), // journal
     DISABLED(EmojiParser.parseToUnicode(":heavy_multiplication_x:")),
     ENABLED(EmojiParser.parseToUnicode(":heavy_check_mark:")),
+    ON(EmojiParser.parseToUnicode(":heavy_plus_sign:")),
+    OFF(EmojiParser.parseToUnicode(":heavy_minus_sign:")),
 //    ENABLED(EmojiParser.parseToUnicode(":white_check_mark:")),
 
 

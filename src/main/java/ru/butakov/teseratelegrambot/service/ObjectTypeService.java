@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ObjectTypeService {
     ObjectTypeRepository objectTypeRepository;
-    Map<String, ObjectType> objectTypeMap = new HashMap<>();
+    final Map<String, ObjectType> objectTypeMap = new HashMap<>();
 
     @Autowired
     public void setObjectTypeRepository(ObjectTypeRepository objectTypeRepository) {

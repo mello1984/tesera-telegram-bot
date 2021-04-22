@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,18 +27,13 @@ import java.util.Set;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateService {
-
     @Autowired
     ReplyMessageService replyMessageService;
     @Autowired
     SendMessageFormat sendMessageFormat;
 
     @Autowired
-    WebHookTeseraBot teseraBot;
-    @Autowired
     MainService mainService;
-    @Autowired
-    UserService userService;
     @Autowired
     ObjectTypeService objectTypeService;
     @Autowired
@@ -51,6 +47,11 @@ public class UpdateService {
     @Autowired
     GameService gameService;
 
+    @Value("${tesera.object.type.game}")
+    String teseraObjectTypeGame;
+    @Value("${tesera.object.type.comment}")
+    String teseraObjectTypeComment;
+
     @Scheduled(fixedRateString = "${tesera.updateperiod}")
     public void updateTask() {
         int maxTeseraId = sendPublicationsAndCommentsAndGetMaxTeseraId();
@@ -59,7 +60,6 @@ public class UpdateService {
 
 
     public int sendPublicationsAndCommentsAndGetMaxTeseraId() {
-
         TeseraIdObject teseraIdObject = teseraIdObjectService.findTopByTeseraId();
         Map<String, ObjectType> objectTypeMap = objectTypeService.getMapObjectTypes();
 
@@ -74,20 +74,18 @@ public class UpdateService {
 
     private int sendCommentsAndGetMaxTeseraId(TeseraIdObject teseraIdObject, int maxTeseraId, Map<String, ObjectType> objectTypeMap) {
         List<Comment> comments = mainService.getCommentList();
-        Set<User> subscribedOnComments = objectTypeMap.get("Comment").getUserSet();
+        Set<User> subscribedOnComments = objectTypeMap.get(teseraObjectTypeComment).getUserSet();
         for (Comment c : comments) {
             if (c.getTeseraId() <= teseraIdObject.getTeseraId()) continue;
             maxTeseraId = Math.max(maxTeseraId, c.getTeseraId());
 
             Game game = null;
-            if (c.getCommentObject().getObjectType().equals("Game")) {
-                Optional<Game> gameFromDb = gameService.findByTeseraId(c.getCommentObject().getTeseraId());
-                game = gameFromDb.orElse(null);
+            if (c.getCommentObject().getObjectType().equals(teseraObjectTypeGame)) {
+                game = gameService.findByTeseraId(c.getCommentObject().getTeseraId()).orElse(null);
             }
 
             Set<User> subscribedOnObjectType = objectTypeMap.get(c.getCommentObject().getObjectType()).getUserSet();
             for (User user : subscribedOnObjectType) {
-
                 if (!subscribedOnComments.contains(user) && !user.getGames().contains(game)) continue;
                 SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(user.getChatId());
                 sendMessage.setText(commentModel.getCommentMessage(c));

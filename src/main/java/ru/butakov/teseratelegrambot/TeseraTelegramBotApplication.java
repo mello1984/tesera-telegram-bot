@@ -1,6 +1,7 @@
 package ru.butakov.teseratelegrambot;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -12,21 +13,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 @SpringBootApplication(scanBasePackages = "ru.butakov.teseratelegrambot.*")
 @EnableScheduling
+@Slf4j
 public class TeseraTelegramBotApplication {
 
     public static void main(String[] args) {
+        log.info("Start application");
         SpringApplication.run(TeseraTelegramBotApplication.class, args);
     }
 }
 
-//TODO: [*] Защита от ddos
-//TODO: [*] Подписка на игры - pagination для отписки
-//TODO: [*] Логирование
-//TODO: [*] Все сообщения вынести в messages
-//------------------------------------------------------------------
-//TODO: [+] Подписка на игры
-//TODO: [+] Публикации и комментарии - текст сообщения
-//TODO: [+] Исправить текст отображения игр
-//TODO: [+] Проверить создание пользователя при первом сообщении
-//TODO: [+] Добавить эмодзи
-//TODO: [-] Подписка на пользователей - наверное нет смысла
+//TODO: [?] Защита от ddos
+//TODO: [?] Подписка на игры из профиля пользователя

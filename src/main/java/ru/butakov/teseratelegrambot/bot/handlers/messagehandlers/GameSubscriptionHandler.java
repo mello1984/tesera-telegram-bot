@@ -7,9 +7,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.butakov.teseratelegrambot.entity.Game;
 import ru.butakov.teseratelegrambot.entity.User;
 import ru.butakov.teseratelegrambot.service.GameService;
+import ru.butakov.teseratelegrambot.service.MessageSenderService;
 import ru.butakov.teseratelegrambot.service.SubscriptionGameService;
 import ru.butakov.teseratelegrambot.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -20,12 +22,14 @@ public class GameSubscriptionHandler extends AbstractHandler {
     UserService userService;
     @Autowired
     GameService gameService;
+    @Autowired
+    MessageSenderService messageSenderService;
 
     @Override
     public SendMessage handle(Message message) {
         String replyText = "";
         if (message.getText().equals("/game_unsubscribe"))
-            replyText = getUnsubscribeMessage(message.getChatId());
+            sendUnsubscribeMessage(message.getChatId());
         else if (message.getText().equals("/game_unsubscribe_all"))
             replyText = clearGameSet(message);
         else
@@ -63,8 +67,17 @@ public class GameSubscriptionHandler extends AbstractHandler {
         return replyText;
     }
 
-    private String getUnsubscribeMessage(long chatId) {
-        return subscriptionGameService.getUnsubscribeTextMessage(chatId);
+    //    private String getUnsubscribeMessage(long chatId) {
+//        return subscriptionGameService.getUnsubscribeTextMessage(chatId);
+//    }
+    private void sendUnsubscribeMessage(long chatId) {
+        List<String> textList = subscriptionGameService.getListUnsubscribeTextMessage(chatId);
+        if (textList.isEmpty()) textList.add(replyMessageService.getMessage("reply.search.unsubscribe.empty"));
+        textList.forEach(text->{
+            SendMessage sendMessage = sendMessageFormat.getSendMessageBaseFormat(chatId);
+            sendMessage.setText(text);
+            messageSenderService.offerBotApiMethodToQueue(sendMessage);
+        });
     }
 
     @Override

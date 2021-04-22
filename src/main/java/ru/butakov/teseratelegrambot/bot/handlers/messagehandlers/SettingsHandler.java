@@ -81,7 +81,7 @@ public class SettingsHandler extends AbstractHandler {
         InlineKeyboardButton buttonJournal = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeJournal, replyMessageService.getMessage("reply.type.journal"));
         InlineKeyboardButton buttonThought = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeThought, replyMessageService.getMessage("reply.type.thought"));
         InlineKeyboardButton buttonComment = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeComment, replyMessageService.getMessage("reply.type.comment"));
-        InlineKeyboardButton buttonGame = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeNews, replyMessageService.getMessage("reply.type.game"));
+        InlineKeyboardButton buttonGame = getInlineKeyboardButton(userObjectTypes, teseraObjectTypeGame, replyMessageService.getMessage("reply.type.game"));
 
         List<InlineKeyboardButton> keyboardRow1 = new ArrayList<>(Arrays.asList(buttonNews, buttonArticle, buttonJournal));
         List<InlineKeyboardButton> keyboardRow2 = new ArrayList<>(Arrays.asList(buttonThought, buttonGame, buttonComment));
@@ -94,7 +94,7 @@ public class SettingsHandler extends AbstractHandler {
 
     private InlineKeyboardButton getInlineKeyboardButton(Set<ObjectType> userObjectTypes, String type, String buttonText) {
         return !userObjectTypes.contains(objectTypeService.getObjectType(type)) ?
-                new InlineKeyboardButton(buttonText + ": вкл", null, type + "_On", null, null, null, null, null) :
-                new InlineKeyboardButton(buttonText + ": выкл", null, type + "_Off", null, null, null, null, null);
+                new InlineKeyboardButton(Emojis.ON.toString() + " " + buttonText, null, type + "_On", null, null, null, null, null) :
+                new InlineKeyboardButton(Emojis.OFF.toString() + " " + buttonText, null, type + "_Off", null, null, null, null, null);
     }
 }

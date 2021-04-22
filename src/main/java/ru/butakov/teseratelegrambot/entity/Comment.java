@@ -23,5 +23,4 @@ public class Comment  {
     @JsonProperty(value = "object")
     CommentObject commentObject;
     String url;
-
 }

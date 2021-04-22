@@ -18,16 +18,4 @@ public class TeseraIdObject {
 
     @Column
     int teseraId;
-
-//    public TeseraIdObject(Comment comment) {
-//        teseraId = comment.getTeseraId();
-//    }
-//
-//    public TeseraIdObject(Publication publication) {
-//        teseraId = publication.getObjectId();
-//    }
-//
-//    public TeseraIdObject(int teseraId) {
-//        this.teseraId = teseraId;
-//    }
 }

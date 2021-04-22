@@ -12,8 +12,10 @@ import ru.butakov.teseratelegrambot.entity.User;
 import ru.butakov.teseratelegrambot.model.GameModel;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SubscriptionGameService {
@@ -27,6 +29,8 @@ public class SubscriptionGameService {
     UserService userService;
     @Autowired
     GameService gameService;
+    @Autowired
+    ReplyMessageService replyMessageService;
 
     public String getSubscribeTextMessage(String query) {
         return getTextMessageFromList(getGamesList(query));
@@ -46,11 +50,11 @@ public class SubscriptionGameService {
         return result;
     }
 
-
     private String getTextMessageFromList(List<Game> games) {
-        StringBuilder result = new StringBuilder("Результаты поиска:\n");
+        StringBuilder result = new StringBuilder(replyMessageService.getMessage("reply.search.results.head"));
         for (Game g : games) {
-            result.append(String.format("%s\nСсылка: %s\nПодписаться: %s\n***\n", g.getTitle(), g.getUrl(), "/gameadd_" + g.getTeseraId()));
+            result.append(replyMessageService.getMessage("reply.search.subscribe",
+                    new Object[]{g.getTitle(), g.getUrl(), "/gameadd_" + g.getTeseraId()}));
         }
         return result.toString();
     }
@@ -58,10 +62,36 @@ public class SubscriptionGameService {
     public String getUnsubscribeTextMessage(long chatId) {
         User user = userService.findUserByIdOrCreateNewUser(chatId);
         Set<Game> gameSet = user.getGames();
-        StringBuilder result = new StringBuilder("Результаты поиска:\n");
+        StringBuilder result = new StringBuilder(replyMessageService.getMessage("reply.search.results.head"));
         for (Game g : gameSet) {
-            result.append(String.format("%s\nОтписаться: %s\n***\n", g.getTitle(), "/gameremove_" + g.getTeseraId()));
+            result.append(replyMessageService.getMessage("reply.search.unsubscribe",
+                    new Object[]{g.getTitle(), "/gameremove_" + g.getTeseraId()}));
         }
         return result.toString();
+    }
+
+    public List<String> getListUnsubscribeTextMessage(long chatId) {
+
+        User user = userService.findUserByIdOrCreateNewUser(chatId);
+        List<Game> games = user.getGames().stream()
+                .sorted(Comparator.comparing(Game::getTitle))
+                .collect(Collectors.toList());
+
+        List<String> resultList = new ArrayList<>();
+        StringBuilder textMessage = new StringBuilder(replyMessageService.getMessage("reply.search.results.head"));
+        int count = 0;
+
+        for (Game g : games) {
+            textMessage.append(replyMessageService.getMessage("reply.search.unsubscribe",
+                    new Object[]{g.getTitle(), "/gameremove_" + g.getTeseraId()}));
+            count += 1;
+            if (count % 20 == 0 && count > 0) {
+                resultList.add(textMessage.toString());
+                textMessage.setLength(0);
+            }
+        }
+
+        if (textMessage.length() > 0) resultList.add(textMessage.toString());
+        return resultList;
     }
 }
