@@ -37,3 +37,9 @@ out/
 .vscode/
 
 src/main/resources/bot.properties
+
+*.log
+
+*.pem
+
+src/main/resources/keystore.p12

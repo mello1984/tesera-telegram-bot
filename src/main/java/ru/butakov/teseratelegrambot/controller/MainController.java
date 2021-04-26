@@ -18,4 +18,9 @@ public class MainController {
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return mainService.onUpdateReceived(update);
     }
+
+    @RequestMapping(value = "/callback/", method = RequestMethod.POST)
+    public BotApiMethod<?> onUpdateReceived2(@RequestBody Update update) {
+        return mainService.onUpdateReceived(update);
+    }
 }
