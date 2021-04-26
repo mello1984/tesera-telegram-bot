@@ -79,6 +79,7 @@ public class UpdateService {
             if (c.getTeseraId() <= teseraIdObject.getTeseraId()) continue;
             maxTeseraId = Math.max(maxTeseraId, c.getTeseraId());
 
+            if (c.getCommentObject() == null) continue;
             Game game = null;
             if (c.getCommentObject().getObjectType().equals(teseraObjectTypeGame)) {
                 game = gameService.findByTeseraId(c.getCommentObject().getTeseraId()).orElse(null);

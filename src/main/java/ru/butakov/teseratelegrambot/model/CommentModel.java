@@ -34,6 +34,8 @@ public class CommentModel {
     String teseraThoughtCommentUrl;
     @Value("${tesera.journal.comment}")
     String teseraJournalCommentUrl;
+    @Value("${tesera.comment}")
+    String teseraCommentUrl;
     @Autowired
     RestTemplate restTemplate;
     @Autowired
@@ -72,6 +74,11 @@ public class CommentModel {
     }
 
     private void updateUrl(Comment comment) {
+        if (comment.getCommentObject()==null){
+            comment.setUrl(String.format(teseraCommentUrl, comment.getTeseraId()));
+            return;
+        }
+
         String type = comment.getCommentObject().getObjectType();
         String alias = comment.getCommentObject().getAlias();
         int teseraId = comment.getTeseraId();
