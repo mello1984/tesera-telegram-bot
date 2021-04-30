@@ -1,0 +1,30 @@
+22.04.2021 17:16:13.141 [main] INFO  r.b.t.TeseraTelegramBotApplication - Start application
+22.04.2021 17:16:13.463 [main] INFO  r.b.t.TeseraTelegramBotApplication - Starting TeseraTelegramBotApplication using Java 15.0.2 on DESKTOP-2ICTH86 with PID 11960 (E:\Java\_Projects\tesera-telegram-bot\build\classes\java\main started by root in E:\Java\_Projects\tesera-telegram-bot)
+22.04.2021 17:16:13.464 [main] INFO  r.b.t.TeseraTelegramBotApplication - No active profile set, falling back to default profiles: default
+22.04.2021 17:16:14.013 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+22.04.2021 17:16:14.071 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 4 JPA repository interfaces.
+22.04.2021 17:16:14.496 [main] INFO  o.s.b.w.e.t.TomcatWebServer - Tomcat initialized with port(s): 5000 (http)
+22.04.2021 17:16:14.503 [main] INFO  o.a.c.h.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-5000"]
+22.04.2021 17:16:14.503 [main] INFO  o.a.c.c.StandardService - Starting service [Tomcat]
+22.04.2021 17:16:14.503 [main] INFO  o.a.c.c.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.44]
+22.04.2021 17:16:14.613 [main] INFO  o.a.c.c.C.[.[.[/] - Initializing Spring embedded WebApplicationContext
+22.04.2021 17:16:14.613 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1111 ms
+22.04.2021 17:16:14.755 [main] INFO  o.h.j.i.u.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+22.04.2021 17:16:14.790 [main] INFO  o.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.29.Final
+22.04.2021 17:16:14.878 [main] INFO  o.h.a.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+22.04.2021 17:16:14.949 [main] INFO  c.z.h.HikariDataSource - HikariPool-1 - Starting...
+22.04.2021 17:16:15.189 [main] INFO  c.z.h.HikariDataSource - HikariPool-1 - Start completed.
+22.04.2021 17:16:15.206 [main] INFO  o.h.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+22.04.2021 17:16:15.859 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+22.04.2021 17:16:15.867 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+22.04.2021 17:16:16.504 [main] INFO  o.s.s.c.ThreadPoolTaskScheduler - Initializing ExecutorService 'taskScheduler'
+22.04.2021 17:16:16.540 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+22.04.2021 17:16:16.628 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+22.04.2021 17:16:16.759 [main] INFO  o.a.c.h.Http11NioProtocol - Starting ProtocolHandler ["http-nio-5000"]
+22.04.2021 17:16:16.779 [main] INFO  o.s.b.w.e.t.TomcatWebServer - Tomcat started on port(s): 5000 (http) with context path ''
+22.04.2021 17:16:16.790 [main] INFO  r.b.t.TeseraTelegramBotApplication - Started TeseraTelegramBotApplication in 3.579 seconds (JVM running for 4.212)
+22.04.2021 17:16:17.483 [taskScheduler-1] INFO  r.b.t.s.UpdateService - UpdateTask executed, maxTeseraId = 1869125
+22.04.2021 17:16:23.255 [http-nio-5000-exec-2] INFO  o.a.c.c.C.[.[.[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+22.04.2021 17:16:23.256 [http-nio-5000-exec-2] INFO  o.s.w.s.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+22.04.2021 17:16:23.257 [http-nio-5000-exec-2] INFO  o.s.w.s.DispatcherServlet - Completed initialization in 1 ms
+22.04.2021 17:16:23.351 [http-nio-5000-exec-2] INFO  r.b.t.b.TelegramFacade - New message from User:534122061, with text: /help
