@@ -13,8 +13,7 @@ import java.util.Locale;
 public class ReplyMessageService {
     @Autowired
     MessageSource messageSource;
-    final Locale locale = Locale.forLanguageTag("ru_RU");
-
+    final Locale locale = Locale.forLanguageTag("ru-RU");
 
     public String getMessage(String messageCode, Object[] args) {
         return messageSource.getMessage(messageCode, args, locale);

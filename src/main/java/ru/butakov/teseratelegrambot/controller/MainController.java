@@ -14,13 +14,13 @@ public class MainController {
     @Autowired
     MainService mainService;
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @RequestMapping(value = {"/", "/callback/"}, method = RequestMethod.POST)
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return mainService.onUpdateReceived(update);
     }
 
-    @RequestMapping(value = "/callback/", method = RequestMethod.POST)
-    public BotApiMethod<?> onUpdateReceived2(@RequestBody Update update) {
-        return mainService.onUpdateReceived(update);
-    }
+//    @RequestMapping(value = "/", method = RequestMethod.GET)
+//    public String onUpdateReceivedGet() {
+//        return "Request received";
+//    }
 }
