@@ -39,3 +39,11 @@ out/
 src/main/resources/bot.properties
 
 *.log
+
+*.pem
+
+src/main/resources/keystore.p12
+
+*.gz
+
+src/main/resources/private.properties
