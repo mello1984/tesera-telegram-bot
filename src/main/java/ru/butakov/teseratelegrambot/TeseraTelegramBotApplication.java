@@ -22,6 +22,5 @@ public class TeseraTelegramBotApplication {
     }
 }
 
-//TODO: [*] NPE TeseraOID, OTYpes
 //TODO: [?] Защита от ddos
 //TODO: [?] Подписка на игры из профиля пользователя

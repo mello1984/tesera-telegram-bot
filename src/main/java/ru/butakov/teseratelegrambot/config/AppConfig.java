@@ -44,10 +44,10 @@ public class AppConfig {
             @Value("${bot.name}") String botName,
             @Value("${telegrambot.registerwebhook.path}") String telegramSetWebhookPath,
             @Value("${server.use_self_signed_certificate}") boolean useSelfSignedCertificate,
-            @Value("${bot.webHookPath}") String botWebHookPath,
-            @Value("${bot.ip}") String ipAddress,
-            @Value("${server.port}") String port,
-            @Value("${bot.certificate}") String certificate,
+            @Value("${bot.webHookPath:/}") String botWebHookPath,
+            @Value("${bot.ip:}") String ipAddress,
+            @Value("${server.port:}") String port,
+            @Value("${bot.certificate:}") String certificate,
             @Autowired RestTemplate restTemplate
     ) {
         return useSelfSignedCertificate ?
