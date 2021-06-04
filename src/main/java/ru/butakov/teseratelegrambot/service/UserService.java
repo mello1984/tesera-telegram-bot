@@ -23,7 +23,7 @@ public class UserService {
     public User findUserByIdOrCreateNewUser(long chatId) {
         Optional<User> userFromDb = userRepository.findUsersByChatId(chatId);
         User user = userFromDb.orElseGet(() -> new User(chatId));
-        if (userFromDb.isEmpty()) saveUser(user);
+        if (userFromDb.isEmpty()) user = userRepository.save(user);
         return user;
     }
 }

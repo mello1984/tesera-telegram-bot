@@ -23,8 +23,8 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.butakov.teseratelegrambot.bot.WebHookTeseraBot;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,8 +74,8 @@ public class AppConfig {
         try {
             log.info("Create WebHookTeseraBot, try register self-signed certificate");
             String url = ipAddress + ":" + port;
-            File resource = new ClassPathResource(certificate).getFile();
-            InputFile certificateFile = new InputFile(resource);
+            InputStream resource = new ClassPathResource(certificate).getInputStream();
+            InputFile certificateFile = new InputFile(resource, certificate);
             int maxConnections = 40;
             List<String> allowedUpdates = Collections.emptyList();
             Boolean dropPendingUpdates = null;
